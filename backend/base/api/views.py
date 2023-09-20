@@ -1,9 +1,13 @@
 from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+from .serializers import AnimeSerializer
+from base.models import Anime
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -26,3 +30,12 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def getRoutes(request):
     routes = ["/api/token", "/api/token/refresh"]
     return Response(routes)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getAnime(request):
+    user = request.user
+    animes = user.anime_set.all()
+    serializer = AnimeSerializer(animes, many=True)
+    return Response(serializer.data)
