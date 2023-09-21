@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import Header from "./components/Header";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -15,8 +16,10 @@ function App() {
           <Routes>
             <Route path="/" element={<PrivateRoute component={HomePage} />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </AuthProvider>
+        <Routes></Routes>
       </Router>
     </div>
   );

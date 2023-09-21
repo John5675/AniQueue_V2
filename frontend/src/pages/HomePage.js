@@ -29,7 +29,6 @@ const HomePage = () => {
 
   return (
     <div>
-      <p>You are logged to the home page!</p>
       <AnimePage />
       <ul>
         {animes.map((anime) => (

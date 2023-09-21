@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
       ? jwt_decode(localStorage.getItem("authTokens"))
       : null
   );
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   let [loading, setLoading] = useState(true);
 
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
     navigate("/login");
   };
 
-  let updateToken = async () => {
+  let updateToken = async (isInitial = false) => {
     console.log("Update token called!");
     let response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
       method: "POST",
@@ -69,18 +70,21 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
-    } else {
+    } else if (!isInitial) {
       logoutUser();
     }
 
     if (loading) {
       setLoading(false);
     }
+    if (isInitial) {
+      setIsInitialLoad(false);
+    }
   };
 
   useEffect(() => {
     if (loading) {
-      updateToken();
+      updateToken(true); // Pass true to indicate it's the initial load
     }
 
     let fourMinutes = 1000 * 60 * 4;
