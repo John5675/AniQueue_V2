@@ -2,6 +2,9 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+import requests
+from datetime import datetime, timedelta
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -39,3 +42,47 @@ def getAnime(request):
     animes = user.anime_set.all()
     serializer = AnimeSerializer(animes, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def UpcomingAnime(request):
+    current_time = datetime.now()
+    next_day = current_time + timedelta(days=1)
+    next_day_str = next_day.strftime("%A").lower()
+    try:
+        response = requests.get(
+            f"https://api.jikan.moe/v4/schedules?filter={next_day_str}"
+        )
+
+        if response.status_code == 200:
+            anime_data = response.json()
+            return Response({"data": anime_data}, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"error": "Failed to fetch data from Jikan API"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(["GET"])
+def SearchedAnime(request):
+    try:
+        query = request.GET.get("query", "")
+        print(query)
+        url = f"https://api.jikan.moe/v4/anime?q={query}&order_by=popularity&limit=20"
+
+        # Fetch data from Jikan API
+        response = requests.get(url)
+        anime_data = response.json()
+        print(anime_data)
+
+        # Filter only the needed data or you can send all data to frontend
+        searched_anime = anime_data  # Or your own filtered list
+
+        return Response({"data": anime_data}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
