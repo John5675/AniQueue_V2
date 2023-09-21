@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../context/AuthContext";
 import AnimePage from "./AnimePage";
+import AnimeCard from "../components/AnimeCard";
+import { Card, CardContent, CardMedia, Typography, Grid } from "@mui/material";
 
 const HomePage = () => {
   let [animes, setAnimes] = useState([]);
@@ -30,11 +32,17 @@ const HomePage = () => {
   return (
     <div>
       <AnimePage />
-      <ul>
+      <p>Your List</p>
+      <Grid container spacing={2} style={{ margin: "0 20%", maxWidth: "60%" }}>
         {animes.map((anime) => (
-          <li key={anime.id}>{anime.body}</li>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <AnimeCard
+              key={anime.id}
+              anime={anime.json_data} // This assumes that AnimeCard expects a prop named 'anime'
+            />
+          </Grid>
         ))}
-      </ul>
+      </Grid>
     </div>
   );
 };

@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("", views.getRoutes),
+    path("add_anime_to_user/", views.addAnimeToUser, name="add-anime-to-user"),
     path("register/", views.register_user, name="register_user"),
     path("upcoming_anime/", views.UpcomingAnime),
     path("searched_anime/", views.SearchedAnime),

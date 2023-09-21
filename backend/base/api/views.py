@@ -6,6 +6,7 @@ from rest_framework import status
 import requests
 from datetime import datetime, timedelta
 from .serializers import *
+from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -40,7 +41,7 @@ def getRoutes(request):
 @permission_classes([IsAuthenticated])
 def getAnime(request):
     user = request.user
-    animes = user.anime_set.all()
+    animes = user.animes.all()
     serializer = AnimeSerializer(animes, many=True)
     return Response(serializer.data)
 
@@ -98,3 +99,20 @@ def register_user(request):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def addAnimeToUser(request):
+    user = request.user
+    json_data = request.data.get("json_data")
+
+    # Check if the Anime with the given mal_id exists
+    anime, created = Anime.objects.get_or_create(
+        json_data=json_data,
+    )
+
+    # Add this anime to the user's list of animes
+    user.animes.add(anime)
+
+    return Response({"message": "Anime added successfully!"}, status=200)
