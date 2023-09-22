@@ -3,7 +3,7 @@ import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const AnimeCard = ({ anime }) => {
+const AnimeCard = ({ anime, onRemove }) => {
   let { authTokens } = useContext(AuthContext);
   const [nextEpisode, setNextEpisode] = useState("");
   const [timeLeft, setTimeLeft] = useState({});
@@ -137,6 +137,7 @@ const AnimeCard = ({ anime }) => {
         </Card>
       </a>
       <button onClick={addAnimeToUserList}>Add to My List</button>
+      <button onClick={() => onRemove(anime.mal_id)}>Remove</button>
     </div>
   );
 };

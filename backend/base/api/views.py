@@ -109,10 +109,25 @@ def addAnimeToUser(request):
 
     # Check if the Anime with the given mal_id exists
     anime, created = Anime.objects.get_or_create(
-        json_data=json_data,
+        json_data=json_data, mal_id=json_data["mal_id"]
     )
 
     # Add this anime to the user's list of animes
     user.animes.add(anime)
 
     return Response({"message": "Anime added successfully!"}, status=200)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def removeAnimeFromUser(request, anime_id):
+    user = request.user
+    print(anime_id)
+    try:
+        anime = get_object_or_404(Anime, mal_id=anime_id)
+        user.animes.remove(anime)
+
+        return Response({"message": "Anime removed successfully!"}, status=200)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
