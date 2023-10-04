@@ -57,7 +57,9 @@ const HomePage = () => {
   return (
     <div>
       <AnimePage />
-      <p>Your List</p>
+      <Typography variant="h4" style={{ margin: "20px 0" }} align="center">
+        Your List
+      </Typography>
       <Grid container spacing={2} style={{ margin: "0 20%", maxWidth: "60%" }}>
         {animes.map((anime) => (
           <Grid item xs={12} sm={6} md={4} lg={3}>

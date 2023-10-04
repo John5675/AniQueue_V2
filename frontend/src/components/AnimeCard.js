@@ -32,6 +32,7 @@ const AnimeCard = ({ anime, onRemove }) => {
 
       if (response.status === 200) {
         navigate("/");
+        window.location.reload();
       } else {
         console.error(
           "Status:",
@@ -64,7 +65,7 @@ const AnimeCard = ({ anime, onRemove }) => {
       );
 
       // For nextEpisode
-      let message = `Episode ${currentEpisodeNumber} will air on ${nextEpisodeDate.toDateString()} at ${nextEpisodeDate.toLocaleTimeString()}.`;
+      let message = `Episode ${currentEpisodeNumber} - ${nextEpisodeDate.toDateString()}`;
       setNextEpisode(message);
 
       // For timeLeft
@@ -101,7 +102,9 @@ const AnimeCard = ({ anime, onRemove }) => {
         rel="noreferrer"
         style={{ textDecoration: "none" }}
       >
-        <Card style={{ cursor: "pointer" }}>
+        <Card style={{ cursor: "pointer", backgroundColor: "#283747" }}>
+          {" "}
+          {/* Added backgroundColor here */}
           <CardMedia
             component="img"
             alt={anime.title}
@@ -109,28 +112,50 @@ const AnimeCard = ({ anime, onRemove }) => {
             image={anime.images.jpg.image_url}
           />
           <CardContent>
-            <Typography variant="h6" component="h2">
+            <Typography
+              variant="h6"
+              component="h2"
+              style={{ color: "#f3f3f3", fontSize: 14, textAlign: "center" }}
+            >
               {anime.title}
             </Typography>
 
             {/* If anime is not airing, show 'Finished Airing' */}
             {!anime.airing && (
-              <Typography variant="body2" component="p">
+              <Typography
+                variant="body2"
+                component="p"
+                style={{ color: "#f3f3f3" }}
+              >
+                {" "}
+                {/* Added color here */}
                 Finished Airing
               </Typography>
             )}
 
             {/* If anime is airing, show the countdown */}
             {anime.airing && nextEpisode && (
-              <Typography variant="body2" component="p">
+              <Typography
+                variant="body2"
+                component="p"
+                style={{ color: "#f3f3f3" }}
+              >
+                {" "}
+                {/* Added color here */}
                 {nextEpisode}
               </Typography>
             )}
 
             {anime.airing && timeLeft && (
-              <Typography variant="body2" component="p">
-                Time left until airing: {timeLeft.days} days {timeLeft.hours}{" "}
-                hours {timeLeft.minutes} minutes {timeLeft.seconds} seconds{" "}
+              <Typography
+                variant="body2"
+                component="p"
+                style={{ color: "#f3f3f3" }}
+              >
+                {" "}
+                {/* Added color here */}
+                {timeLeft.days} days {timeLeft.hours} hours {timeLeft.minutes}{" "}
+                minutes {timeLeft.seconds} seconds
               </Typography>
             )}
           </CardContent>
